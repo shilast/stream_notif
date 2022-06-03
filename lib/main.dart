@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:stream_notif/setting.dart';
 
 void main() {
   runApp(const MyTodoApp());
@@ -13,143 +16,123 @@ class MyTodoApp extends StatelessWidget {
       // 右上に表示される"debug"ラベルを消す
       debugShowCheckedModeBanner: false,
       // アプリ名
-      title: 'My Todo App',
+      title: 'Twitch live streamer',
       theme: ThemeData(
         // テーマカラー
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       // リスト一覧画面を表示
-      home: const TodoListPage(),
+      home: const StreamListPage(),
     );
   }
 }
 
-class TodoListPage extends StatefulWidget {
-  const TodoListPage({Key? key}) : super(key: key);
+class StreamListPage extends StatefulWidget {
+  const StreamListPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _TodoListPageState createState() => _TodoListPageState();
+  _StreamListPageState createState() => _StreamListPageState();
 }
 
-class _TodoListPageState extends State<TodoListPage> {
+class _StreamListPageState extends State<StreamListPage> {
   // Todoリストのデータ
-  List<String> todoList = [];
+  // ignore: non_constant_identifier_names
+  List<String> StreamList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBarを表示し、タイトルも設定
-      appBar: AppBar(
-        title: const Text('リスト一覧'),
-      ),
-      // データを元にListViewを作成
-      body: ListView.builder(
-        itemCount: todoList.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(todoList[index]),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // "push"で新規画面に遷移
-          // リスト追加画面から渡される値を受け取る
-          final newListText = await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              // 遷移先の画面としてリスト追加画面を指定
-              return const TodoAddPage();
-            }),
-          );
-          if (newListText != null) {
-            // キャンセルした場合は newListText が null となるので注意
-            setState(() {
-              // リスト追加
-              todoList.add(newListText);
-            });
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+        // AppBarを表示し、タイトルも設定
+
+        appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return SettingPage();
+                    },
+                  ),
+                );
+              },
+            )
+          ],
+          centerTitle: true,
+          title: const Text('一覧'),
+        ),
+        bottomNavigationBar:
+            BottomNavigationBar(items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            activeIcon: Icon(Icons.book_online),
+            label: 'Book',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            activeIcon: Icon(Icons.business_center),
+            label: 'Business',
+            backgroundColor: Colors.green,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            activeIcon: Icon(Icons.school_outlined),
+            label: 'School',
+            backgroundColor: Colors.purple,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            activeIcon: Icon(Icons.settings_accessibility),
+            label: 'Settings',
+            backgroundColor: Colors.pink,
+          ),
+          // データを元にListViewを作成
+        ]));
   }
 }
 
-class TodoAddPage extends StatefulWidget {
-  const TodoAddPage({Key? key}) : super(key: key);
+class SideNavigation extends StatefulWidget {
+  const SideNavigation({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _TodoAddPageState createState() => _TodoAddPageState();
+  _SideNavigationState createState() => _SideNavigationState();
 }
 
-class _TodoAddPageState extends State<TodoAddPage> {
-  // 入力されたテキストをデータとして持つ
-  String _text = '';
+class _SideNavigationState extends State<SideNavigation> {
+  int selectedIndex = 0;
 
-  // データを元に表示するWidget
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('リスト追加'),
-      ),
-      body: Container(
-        // 余白を付ける
-        padding: const EdgeInsets.all(64),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // 入力されたテキストを表示
-            Text(_text, style: const TextStyle(color: Colors.blue)),
-            const SizedBox(height: 8),
-            // テキスト入力
-            TextField(
-              // 入力されたテキストの値を受け取る（valueが入力されたテキスト）
-              onChanged: (String value) {
-                // データが変更したことを知らせる（画面を更新する）
-                setState(() {
-                  // データを変更
-                  _text = value;
-                });
-              },
-            ),
-            const SizedBox(height: 8),
-            Container(
-              // 横幅いっぱいに広げる
-              width: double.infinity,
-              // リスト追加ボタン
-              child: ElevatedButton(
-                onPressed: () {
-                  // "pop"で前の画面に戻る
-                  // "pop"の引数から前の画面にデータを渡す
-                  Navigator.of(context).pop(_text);
-                },
-                child:
-                    const Text('リスト追加', style: TextStyle(color: Colors.white)),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              // 横幅いっぱいに広げる
-              width: double.infinity,
-              // キャンセルボタン
-              child: TextButton(
-                // ボタンをクリックした時の処理
-                onPressed: () {
-                  // "pop"で前の画面に戻る
-                  Navigator.of(context).pop();
-                },
-                child: const Text('キャンセル'),
-              ),
-            ),
-          ],
+    return NavigationRail(
+      selectedIndex: selectedIndex,
+      onDestinationSelected: (index) {
+        setState(() {
+          selectedIndex = index;
+        });
+      },
+      destinations: const [
+        NavigationRailDestination(
+          icon: Icon(Icons.thumbs_up_down),
+          label: Text('ThumbsUpDown'),
         ),
-      ),
+        NavigationRailDestination(
+          icon: Icon(Icons.people),
+          label: Text('People'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.face),
+          label: Text('Face'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.bookmark),
+          label: Text('Bookmark'),
+        ),
+      ],
     );
   }
 }
