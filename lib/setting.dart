@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 
 import 'main.dart';
@@ -35,10 +37,6 @@ class SettingListPage extends StatefulWidget {
 }
 
 class _StreamListPageState extends State<SettingListPage> {
-  // Todoリストのデータ
-  // ignore: non_constant_identifier_names
-  List<String> StreamList = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +50,7 @@ class _StreamListPageState extends State<SettingListPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return MyTodoApp();
+                    return const MyTodoApp();
                   },
                 ),
               );

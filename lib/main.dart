@@ -1,6 +1,5 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:stream_notif/setting.dart';
 
 void main() {
@@ -37,10 +36,6 @@ class StreamListPage extends StatefulWidget {
 }
 
 class _StreamListPageState extends State<StreamListPage> {
-  // Todoリストのデータ
-  // ignore: non_constant_identifier_names
-  List<String> StreamList = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,12 +44,12 @@ class _StreamListPageState extends State<StreamListPage> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return SettingPage();
+                      return const SettingPage();
                     },
                   ),
                 );
@@ -64,6 +59,7 @@ class _StreamListPageState extends State<StreamListPage> {
           centerTitle: true,
           title: const Text('一覧'),
         ),
+        body: const CardList(),
         bottomNavigationBar:
             BottomNavigationBar(items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -95,44 +91,140 @@ class _StreamListPageState extends State<StreamListPage> {
   }
 }
 
-class SideNavigation extends StatefulWidget {
-  const SideNavigation({Key? key}) : super(key: key);
+class _ContentCard extends StatelessWidget {
+  const _ContentCard({Key? key}) : super(key: key);
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _SideNavigationState createState() => _SideNavigationState();
-}
-
-class _SideNavigationState extends State<SideNavigation> {
-  int selectedIndex = 0;
+  final name = 'aiueo';
+  final textReason = 'kakikukeko';
 
   @override
   Widget build(BuildContext context) {
-    return NavigationRail(
-      selectedIndex: selectedIndex,
-      onDestinationSelected: (index) {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
-      destinations: const [
-        NavigationRailDestination(
-          icon: Icon(Icons.thumbs_up_down),
-          label: Text('ThumbsUpDown'),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Card(
+        elevation: 8,
+        shadowColor: Colors.grey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
-        NavigationRailDestination(
-          icon: Icon(Icons.people),
-          label: Text('People'),
+        child: Column(
+          children: [
+            ListTile(
+              leading: ClipOval(
+                child: Container(
+                  color: Colors.blue,
+                  width: 48,
+                  height: 48,
+                  child: Center(
+                    child: Text(
+                      name.substring(0, 1),
+                      style: const TextStyle(color: Colors.white, fontSize: 24),
+                    ),
+                  ),
+                ),
+              ),
+              title: Text(name),
+              subtitle: const Text('2 min ago'),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 72),
+                  Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blue, width: 4),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Flexible(child: Text('hello')),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.blue, width: 2),
+                      ),
+                    ),
+                    child: Text(
+                      textReason,
+                      style: const TextStyle(color: Colors.blueAccent),
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.blue,
+                      ),
+                      onPressed: () {},
+                      child: const Text('sashisuseso'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.blue,
+                        backgroundColor: Colors.blue.withOpacity(0.2),
+                      ),
+                      onPressed: () {},
+                      child: const Text('tachitssuteto'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        NavigationRailDestination(
-          icon: Icon(Icons.face),
-          label: Text('Face'),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.bookmark),
-          label: Text('Bookmark'),
-        ),
-      ],
+      ),
     );
   }
+}
+
+class CardList extends StatelessWidget {
+  const CardList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 0),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: ListView(
+              children: const [
+                _ContentCard(),
+                _ContentCard(),
+                _ContentCard(),
+                _ContentCard(),
+                _ContentCard(),
+                _ContentCard(),
+                _ContentCard(),
+                _ContentCard(),
+                _ContentCard(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _getTwitchAPI{
+
+  base_url='https://api.twitch.tv/helix/channels?broadcaster_id=kato_junichi0817';
+  cliient_id='d5hwqf5jpal58uh7hct83bcdzqt1qw';
+  var response = await http.get(base_url.client_id);
 }
