@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:stream_notif/setting.dart';
 
@@ -223,8 +224,34 @@ class CardList extends StatelessWidget {
 }
 
 class _getTwitchAPI{
+  Map<String,String> a=jsonDecode(_requestOauth());
+  var access= a['access_token'];
+  var headers = {
+    'Authorization': access,
+    'Client-Id': 'd5hwqf5jpal58uh7hct83bcdzqt1qw',
+  };
 
-  base_url='https://api.twitch.tv/helix/channels?broadcaster_id=kato_junichi0817';
-  cliient_id='d5hwqf5jpal58uh7hct83bcdzqt1qw';
-  var response = await http.get(base_url.client_id);
+  var params = {
+    'broadcaster_id': '50988750',
+  };
+  var query = params.entries.map((p) => '${p.key}=${p.value}').join('&');
+
+  var url = Uri.parse('https://api.twitch.tv/helix/channels?$query');
+  var res = await http.get(url, headers: headers);
+  if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
+  print(res.body);
+}
+
+ _requestOauth() async {
+
+  var headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+
+  var data = 'client_id=d5hwqf5jpal58uh7hct83bcdzqt1qw&client_secret=csol10s2i5iy7iupfotoeboyrpcj6z&grant_type=client_credentials';
+
+  var url = Uri.parse('https://id.twitch.tv/oauth2/token');
+  var res = await http.post(url, headers: headers, body: data);
+  if (res.statusCode != 200) throw Exception('http.post error: statusCode= ${res.statusCode}');
+  return res.body;
 }
