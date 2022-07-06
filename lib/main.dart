@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:stream_notif/setting.dart';
 
@@ -128,25 +129,6 @@ class _ContentCard extends StatelessWidget {
               subtitle: const Text('2 min ago'),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 72),
-                  Container(
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 4),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Flexible(child: Text('hello')),
-                ],
-              ),
-            ),
-            Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
@@ -159,27 +141,6 @@ class _ContentCard extends StatelessWidget {
                     child: Text(
                       textReason,
                       style: const TextStyle(color: Colors.blueAccent),
-                    ),
-                  ),
-                  const SizedBox(width: 24),
-                  Expanded(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.blue,
-                      ),
-                      onPressed: () {},
-                      child: const Text('sashisuseso'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.blue,
-                        backgroundColor: Colors.blue.withOpacity(0.2),
-                      ),
-                      onPressed: () {},
-                      child: const Text('tachitssuteto'),
                     ),
                   ),
                 ],
@@ -222,12 +183,11 @@ class CardList extends StatelessWidget {
     );
   }
 }
-
-class _getTwitchAPI{
-  Map<String,String> a=jsonDecode(_requestOauth());
-  var access= a['access_token'];
+/*
+Future<void> _getTwitchAPI(accessToken) async {
+  
   var headers = {
-    'Authorization': access,
+    'Authorization': accessToken,
     'Client-Id': 'd5hwqf5jpal58uh7hct83bcdzqt1qw',
   };
 
@@ -238,11 +198,14 @@ class _getTwitchAPI{
 
   var url = Uri.parse('https://api.twitch.tv/helix/channels?$query');
   var res = await http.get(url, headers: headers);
-  if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
-  print(res.body);
+  if (res.statusCode != 200) {
+    throw Exception('http.get error: statusCode= ${res.statusCode}')
+  }else{
+    print(res.body);
+  }
 }
 
- _requestOauth() async {
+Future<Map<String, String>> _requestOauth() async {
 
   var headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -252,6 +215,10 @@ class _getTwitchAPI{
 
   var url = Uri.parse('https://id.twitch.tv/oauth2/token');
   var res = await http.post(url, headers: headers, body: data);
-  if (res.statusCode != 200) throw Exception('http.post error: statusCode= ${res.statusCode}');
-  return res.body;
-}
+  if (res.statusCode != 200){
+    throw Exception('http.post error: statusCode= ${res.statusCode}');
+  }else{
+    Map<String,String> a=jsonDecode(res);
+    return a;
+  }  
+}*/
