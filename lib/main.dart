@@ -183,8 +183,8 @@ class CardList extends StatelessWidget {
     );
   }
 }
-/*
-Future<void> _getTwitchAPI(accessToken) async {
+
+Future<void> _getTwitchAPI(Map<String,String> accessToken) async {
   
   var headers = {
     'Authorization': accessToken,
@@ -207,18 +207,18 @@ Future<void> _getTwitchAPI(accessToken) async {
 
 Future<Map<String, String>> _requestOauth() async {
 
-  var headers = {
+  var header = {
     'Content-Type': 'application/x-www-form-urlencoded',
   };
 
   var data = 'client_id=d5hwqf5jpal58uh7hct83bcdzqt1qw&client_secret=csol10s2i5iy7iupfotoeboyrpcj6z&grant_type=client_credentials';
 
   var url = Uri.parse('https://id.twitch.tv/oauth2/token');
-  var res = await http.post(url, headers: headers, body: data);
+  var res = await http.post(url, headers: header, body: data);
   if (res.statusCode != 200){
     throw Exception('http.post error: statusCode= ${res.statusCode}');
   }else{
-    Map<String,String> a=jsonDecode(res);
+    Map<String,String> a=jsonDecode(res.toString());
     return a;
   }  
-}*/
+}
